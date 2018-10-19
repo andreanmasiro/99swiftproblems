@@ -15,6 +15,11 @@ class List<T> {
         self.init(Array(values))!
     }
 
+    init(value: T, nextItem: List<T>? = nil) {
+        self.value = value
+        self.nextItem = nextItem
+    }
+
     init?(_ values: [T]) {
         guard let first = values.first else {
             return nil
@@ -26,6 +31,27 @@ class List<T> {
     func forEach(_ run: (T) -> Void) {
         run(value)
         nextItem?.forEach(run)
+    }
+
+    func forEachNode(_ run: (List<T>) -> Void) {
+        run(self)
+        nextItem?.forEachNode(run)
+    }
+
+    func copy() -> List<T> {
+        return List<T>(value: value, nextItem: nextItem)
+    }
+
+    func deepCopy() -> List<T> {
+        return List<T>(value: value, nextItem: nextItem?.deepCopy())
+    }
+
+    func advanced(by index: Int) -> List<T>? {
+        return index == 0 ? self : nextItem?.advanced(by: index - 1)
+    }
+
+    func tail() -> List<T> {
+        return nextItem?.tail() ?? self
     }
 }
 
@@ -295,9 +321,9 @@ exercise(11, "encodeModified") {
 
 extension List where T == (Int, String) {
     private func disjointed() -> (List<String>, List<String>) {
-        var head = List<String>(value.1)
+        let head = List<String>(value.1)
         var tail = head
-        for i in 1..<value.0 {
+        for _ in 1..<value.0 {
             let nextItem = List<String>(value.1)
             tail.nextItem = nextItem
             tail = nextItem
@@ -315,4 +341,143 @@ extension List where T == (Int, String) {
 exercise(12, "decode") {
     let list = List((4, "a"), (1, "b"), (2, "c"), (2, "a"), (1, "d"), (4, "e"))
     return list.decode()
+}
+
+extension List where T: Equatable {
+    func encodeDirect() -> List<(Int, T)> {
+        let head = List<(Int, T)>((1, value))
+        var tail = head
+
+        nextItem?.forEach { value in
+            if value == tail.value.1 {
+                tail.value.0 += 1
+            } else {
+                let nextItem = List<(Int, T)>((1, value))
+                tail.nextItem = nextItem
+                tail = nextItem
+            }
+        }
+        return head
+    }
+}
+
+exercise(13, "encodeDirect") {
+    let list = List("a", "a", "a", "a", "b", "c", "c", "a", "a", "d", "e", "e", "e", "e")
+    return list.encodeDirect()
+}
+
+extension List {
+    func duplicate() -> List {
+        var head = copy()
+        head.nextItem = head.copy()
+        head.nextItem?.nextItem = head.nextItem?.nextItem?.duplicate()
+        return head
+    }
+}
+
+exercise(14, "duplicate") {
+    let list = List("a", "b", "c", "c", "d")
+    return list.duplicate()
+}
+
+extension List {
+    func duplicate(times: Int) -> List {
+        if times == 0 {
+            return self
+        } else {
+            var head = copy()
+            head.nextItem = head.copy()
+            head.nextItem?.nextItem = head.nextItem?.nextItem?.duplicate(times: times - 1)
+            return head
+        }
+    }
+}
+
+exercise(15, "duplicateTimes") {
+    let list = List("a", "b", "c", "c", "d")
+    return list.duplicate(times: 3)
+}
+
+extension List {
+    func drop(every: Int) -> List? {
+        guard every > 1 else { return nil }
+        var dropped = copy()
+        dropped.advanced(by: every - 2)?.nextItem = dropped.advanced(by: every - 2)?.nextItem?.nextItem?.drop(every: every)
+
+        return dropped
+    }
+}
+
+exercise(16, "dropEvery") {
+    let list = List("a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k")
+    return list.drop(every: 3)
+}
+
+extension List {
+    func split(atIndex index: Int) -> (left: List, right: List?) {
+        let left = copy()
+        guard let leftTail = left.advanced(by: index - 1) else {
+            return (left, nil)
+        }
+        let right = leftTail.nextItem
+        leftTail.nextItem = nil
+
+        return (left, right)
+    }
+}
+
+exercise(17, "split") {
+    let list = List("a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k")
+    let splitted = list.split(atIndex: 3)
+    return """
+    \(splitted.left)
+    \(splitted.right)
+    """
+}
+
+extension List {
+    func slice(_ from: Int, _ to: Int) -> List {
+        guard from < to else { fatalError("to(\(to)) must be greater than from(\(from))") }
+        guard let head = advanced(by: from)?.copy() else { fatalError("index out of bounds") }
+
+        head.advanced(by: to - from - 1)?.nextItem = nil
+
+        return head
+    }
+}
+
+exercise(18, "slice") {
+    let list = List("a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k")
+    return list.slice(3, 7)
+}
+
+extension List {
+    func rotate(_ amount: Int) -> List {
+        let length = self.length
+        guard amount % length != 0 else { return deepCopy() }
+
+        let realAmount: Int
+        if amount < 0 {
+            let positivityCoefficient = 1 + abs(amount / length)
+            realAmount = amount + Int(positivityCoefficient) * length
+        } else {
+            realAmount = amount % length
+        }
+
+        let head = deepCopy()
+        let formerTail = head.tail()
+        let newTail = head.advanced(by: realAmount - 1)!
+        let newHead = newTail.nextItem
+
+        newTail.nextItem = nil
+
+        formerTail.nextItem = head
+
+        return newHead!
+    }
+}
+
+exercise(19, "rotate") {
+    let list = List("a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k")
+    return list.rotate(3)
 }
