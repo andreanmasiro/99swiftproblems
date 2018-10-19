@@ -28,6 +28,14 @@ class List<T> {
         nextItem = List(Array(values.suffix(from: 1)))
     }
 
+    init?(values: [T]) {
+        guard let first = values.first else {
+            return nil
+        }
+        value = first
+        nextItem = List(Array(values.suffix(from: 1)))
+    }
+
     func forEach(_ run: (T) -> Void) {
         run(value)
         nextItem?.forEach(run)
@@ -47,6 +55,7 @@ class List<T> {
     }
 
     func advanced(by index: Int) -> List<T>? {
+        precondition(index >= 0)
         return index == 0 ? self : nextItem?.advanced(by: index - 1)
     }
 
@@ -368,7 +377,7 @@ exercise(13, "encodeDirect") {
 
 extension List {
     func duplicate() -> List {
-        var head = copy()
+        let head = copy()
         head.nextItem = head.copy()
         head.nextItem?.nextItem = head.nextItem?.nextItem?.duplicate()
         return head
@@ -385,7 +394,7 @@ extension List {
         if times == 0 {
             return self
         } else {
-            var head = copy()
+            let head = copy()
             head.nextItem = head.copy()
             head.nextItem?.nextItem = head.nextItem?.nextItem?.duplicate(times: times - 1)
             return head
@@ -480,4 +489,179 @@ extension List {
 exercise(19, "rotate") {
     let list = List("a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k")
     return list.rotate(3)
+}
+
+extension List {
+    func removeAt(_ position: Int) -> (rest: List?, removed: T?) {
+        if position == 0 { return (nextItem, value) }
+
+        let head = self
+        guard let prev = head.advanced(by: position - 1) else {
+            return (head, nil)
+        }
+
+        let removed = prev.nextItem?.value
+        prev.nextItem = prev.nextItem?.nextItem
+        return (head, removed)
+    }
+}
+
+exercise(20, "removeAt") {
+    let list = List("a", "b", "c", "d")
+    return """
+    \(list.removeAt(0))
+    """
+}
+
+extension List {
+    func insert(at index: Int, _ value: T) {
+        precondition(index >= 0)
+        if index == 0 {
+            nextItem = copy()
+            self.value = value
+            return
+        }
+
+        nextItem?.insert(at: index - 1, value)
+    }
+}
+
+exercise(21, "insertAt") { () -> CustomStringConvertible? in
+    let list = List("a", "b", "c", "d")
+    list.insert(at: 1, "new")
+    return list
+}
+
+extension List where T == Int {
+    class func range(_ from: Int, _ to: Int) -> List<T> {
+        precondition(from <= to)
+
+        if from == to {
+            return List<T>(value: from)
+        }
+
+        return List<T>(value: from, nextItem: List.range(from + 1, to))
+    }
+}
+
+exercise(22, "range factory") {
+    let list = List<Int>.range(4, 9)
+    return list
+}
+
+extension List {
+    func randomSelect(_ amount: Int) -> List {
+        precondition(amount > 0)
+        var remainderIndices = [Int]()
+        var options = [Int](0..<length)
+        for _ in 0..<amount {
+            remainderIndices.append(options.remove(at: Int.random(in: 0..<options.count)))
+        }
+
+        let head = List<T>(value: self[remainderIndices.removeLast()]!)
+        var tail = Optional.some(head)
+        while let index = remainderIndices.popLast() {
+            let next = List<T>(value: self[index]!)
+            tail?.nextItem = next
+            tail = next
+        }
+
+        return head
+
+//        func randomAdvances(_ amount: Int, options: [Int]) -> [Int] {
+//            var remainderIndices = [Int]()
+//            var options = options
+//            for _ in 0..<amount {
+//                remainderIndices.append(options.remove(at: Int.random(in: 0..<options.count)))
+//            }
+//            remainderIndices.sort()
+//
+//            for i in 1...amount {
+//                let currentValue = remainderIndices[remainderIndices.count - i]
+//                let prevIndex = remainderIndices.count - i - 1
+//                let prevValue = prevIndex >= 0 ? remainderIndices[prevIndex] : 0
+//                remainderIndices[remainderIndices.count - i] = currentValue - prevValue
+//            }
+//
+//            remainderIndices.reverse()
+//
+//            return remainderIndices
+//        }
+//
+//        var remainderAdvances = randomAdvances(amount, options: [Int](0..<length))
+//        var head: List<T>?
+//        var tail: List<T>?
+//        var currentIterable = self
+//        while let advCount = remainderAdvances.popLast(), let advanced = currentIterable.advanced(by: advCount) {
+//            currentIterable = advanced
+//            if head != nil {
+//                tail?.nextItem = List(value: advanced.value)
+//                tail = tail?.nextItem
+//            } else {
+//                head = List(value: advanced.value, nextItem: tail)
+//                tail = head
+//            }
+//        }
+//
+//        return head!
+    }
+}
+
+exercise(23, "randomSelect") {
+    let list = List("a", "b", "c", "d", "e", "f", "g", "h")
+    return list.randomSelect(7)
+}
+
+extension List where T == Int {
+    class func lotto(_ count: Int, _ maximum: Int) -> List {
+        precondition(count > 0)
+        var numberOptions = Array(1...maximum)
+        var numbers = [Int]()
+        for _ in 0..<count {
+            let randomIndex = Int.random(in: 0..<numberOptions.count)
+            numbers.append(numberOptions.remove(at: randomIndex))
+        }
+        return List<Int>(numbers)!
+    }
+}
+
+exercise(24, "lotto") {
+    return List<Int>.lotto(6, 49)
+}
+
+extension List {
+    func randomPermute() -> List {
+        return randomSelect(length)
+    }
+}
+
+exercise(25, "randomPermute") {
+    return List("a", "b", "c", "d", "e", "f").randomPermute()
+}
+
+extension Array {
+    func combinations(_ group: Int) -> [[Element]] {
+        var subsets = [[Element]]()
+        for i in 0...(count - group) {
+            for j in (i + 1)..<count {
+                subsets.append([self[i], self[j]])
+            }
+        }
+        return subsets
+    }
+}
+
+extension List {
+    func combinations(_ group: Int) -> List<List<T>> {
+        
+        let base = Array(list: self)
+        let combinations = base.combinations(group)
+        print(combinations)
+        let lists = combinations.map { List(values: $0)! }
+        return List<List<T>>(values: lists)!
+    }
+}
+
+exercise(26, "combinations") {
+    return List("a", "b", "c", "d").combinations(3)
 }
