@@ -1,17 +1,13 @@
 extension List {
-    public var length: Int {
-        guard let nextItem = nextItem else {
-            return 1
-        }
-
-        return nextItem.length + 1
-    }
+  public var length: Int {
+    return 1 + (nextItem?.length ?? 0)
+  }
 }
 
 public class E4: Exercise {
-    public func run() {
-        exercise(4, "length") {
-            return List(1, 1, 2, 3, 5, 8).length
-        }
+  public func run() {
+    exercise(4, "length") {
+      return List(1, 1, 2, 3, 5, 8).length
     }
+  }
 }

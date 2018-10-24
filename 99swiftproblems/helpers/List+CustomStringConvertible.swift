@@ -1,5 +1,5 @@
 extension List: CustomStringConvertible {
-    public var description: String {
-        return log
-    }
+  public var description: String {
+    return log
+  }
 }
