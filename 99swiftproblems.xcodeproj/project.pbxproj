@@ -40,6 +40,8 @@
 		4CA6D011217CEE1600579BDC /* 26B.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CA6D010217CEE1600579BDC /* 26B.swift */; };
 		4CA6D015217CFB4600579BDC /* ExerciseProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CA6D014217CFB4600579BDC /* ExerciseProvider.swift */; };
 		4CA6D017217CFC6D00579BDC /* List+CustomStringConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CA6D016217CFC6D00579BDC /* List+CustomStringConvertible.swift */; };
+		BAA23139217F669D007ACCB3 /* 27.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAA23138217F669D007ACCB3 /* 27.swift */; };
+		BAA2313B217F83F9007ACCB3 /* List+Sequence.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAA2313A217F83F9007ACCB3 /* List+Sequence.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -89,6 +91,8 @@
 		4CA6D010217CEE1600579BDC /* 26B.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = 26B.swift; sourceTree = "<group>"; };
 		4CA6D014217CFB4600579BDC /* ExerciseProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseProvider.swift; sourceTree = "<group>"; };
 		4CA6D016217CFC6D00579BDC /* List+CustomStringConvertible.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "List+CustomStringConvertible.swift"; sourceTree = "<group>"; };
+		BAA23138217F669D007ACCB3 /* 27.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = 27.swift; sourceTree = "<group>"; };
+		BAA2313A217F83F9007ACCB3 /* List+Sequence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "List+Sequence.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -158,6 +162,7 @@
 				4CA6CFD8217CE95300579BDC /* 25.swift */,
 				4CA6CFE0217CE95300579BDC /* 26.swift */,
 				4CA6D010217CEE1600579BDC /* 26B.swift */,
+				BAA23138217F669D007ACCB3 /* 27.swift */,
 			);
 			path = problems;
 			sourceTree = "<group>";
@@ -170,6 +175,7 @@
 				4CA6D00C217CEA9700579BDC /* List.swift */,
 				4CA6D00E217CEAC200579BDC /* Array+List.swift */,
 				4CA6D014217CFB4600579BDC /* ExerciseProvider.swift */,
+				BAA2313A217F83F9007ACCB3 /* List+Sequence.swift */,
 			);
 			path = helpers;
 			sourceTree = "<group>";
@@ -232,6 +238,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BAA2313B217F83F9007ACCB3 /* List+Sequence.swift in Sources */,
 				4CA6CFF5217CE95300579BDC /* 23.swift in Sources */,
 				4CA6D017217CFC6D00579BDC /* List+CustomStringConvertible.swift in Sources */,
 				4CA6CFF3217CE95300579BDC /* 2.swift in Sources */,
@@ -252,6 +259,7 @@
 				4CA6CFFF217CE95300579BDC /* 11.swift in Sources */,
 				4CA6CFFE217CE95300579BDC /* 3.swift in Sources */,
 				4CA6CFF4217CE95300579BDC /* 21.swift in Sources */,
+				BAA23139217F669D007ACCB3 /* 27.swift in Sources */,
 				4CA6CFF0217CE95300579BDC /* 6.swift in Sources */,
 				4CA6D00D217CEA9700579BDC /* List.swift in Sources */,
 				4CA6CFEF217CE95300579BDC /* 4.swift in Sources */,
@@ -392,7 +400,7 @@
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = BEVC4JDNZX;
+				DEVELOPMENT_TEAM = 6T6G538Y2X;
 				MACOSX_DEPLOYMENT_TARGET = 10.14;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
@@ -405,7 +413,7 @@
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = BEVC4JDNZX;
+				DEVELOPMENT_TEAM = 6T6G538Y2X;
 				MACOSX_DEPLOYMENT_TARGET = 10.14;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
