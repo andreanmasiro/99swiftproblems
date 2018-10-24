@@ -25,4 +25,3 @@ public class E9: Exercise {
     }
   }
 }
-

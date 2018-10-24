@@ -1,1 +1,1 @@
-ExerciseProvider.just(E6()).run()
+ExerciseProvider.just(E9()).run()

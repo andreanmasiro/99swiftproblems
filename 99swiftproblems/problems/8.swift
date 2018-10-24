@@ -1,6 +1,6 @@
 extension List where T: Equatable {
   public func compress() {
-    var current = Optional.some(self)
+    var current = Optional.some(deepCopy())
     while current != nil {
       var next = current?.nextItem
       while next?.value == current?.value, next != nil {

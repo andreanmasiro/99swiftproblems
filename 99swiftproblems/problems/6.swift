@@ -22,9 +22,7 @@ extension List where T: Equatable {
   public func isPalindrome() -> Bool {
     guard nextItem != nil else { return false }
 
-    let reversed = self.reversed()
-
-    var head = Optional.some(zip(self, reversed))
+    var head = Optional.some(zip(self, reversed()))
 
     while let h = head {
       guard h.value.0 == h.value.1 else { return false }
