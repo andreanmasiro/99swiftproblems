@@ -24,4 +24,3 @@ public class E13: Exercise {
     }
   }
 }
-
